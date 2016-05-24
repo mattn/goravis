@@ -16,6 +16,10 @@ var whoamiCommand = kingpin.Command("whoami", "Displays accounts and their subsc
 		return err
 	}
 	resp.Body.Close()
-	fmt.Printf("You are %s (%s)\n", u.Login, u.Name)
+	login := u.Login
+	if login == "" {
+		login = u.Name
+	}
+	fmt.Printf("You are %s (%s)\n", login, u.Name)
 	return nil
 })
