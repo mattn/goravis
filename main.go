@@ -1,7 +1,6 @@
 package main
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
@@ -10,9 +9,15 @@ import (
 
 	"github.com/Ableton/go-travis"
 	"github.com/alecthomas/kingpin"
+	"gopkg.in/yaml.v2"
+)
+
+const (
+	VERSION = "0.0.1"
 )
 
 type Config struct {
+	path      string
 	LastCheck struct {
 		ETag    string `yaml:"etag"`
 		Version string `yaml:"version"`
@@ -25,22 +30,34 @@ type Config struct {
 	} `yaml:"endpoints"`
 }
 
+func (c *Config) Load() error {
+	home := os.Getenv("HOME")
+	if home == "" && runtime.GOOS == "windows" {
+		home = os.Getenv("USERPROFILE")
+	}
+	c.path = filepath.Join(home, ".travis", "config.yml")
+	b, err := ioutil.ReadFile(c.path)
+	if err != nil {
+		return err
+	}
+	return yaml.Unmarshal(b, &config)
+}
+
+func (c *Config) Save() error {
+	b, err := yaml.Marshal(c)
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(c.path, b, 0600)
+}
+
 var (
 	config Config
 	client = travis.NewDefaultClient("")
 )
 
 func main() {
-	home := os.Getenv("HOME")
-	if home == "" && runtime.GOOS == "windows" {
-		home = os.Getenv("USERPROFILE")
-	}
-	fn := filepath.Join(home, ".travis", "config.yml")
-	b, err := ioutil.ReadFile(fn)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = yaml.Unmarshal(b, &config)
+	err := config.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
