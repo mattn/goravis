@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -34,6 +35,15 @@ func slug() string {
 	return m[1]
 }
 
+func token() string {
+	t := os.Getenv("TRAVIS_TOKEN")
+	ep, ok := config.EndPoints["https://api.travis-ci.org/"]
+	if ok {
+		t = ep.AccessToken
+	}
+	return t
+}
+
 func auth() error {
-	return client.Authentication.UsingTravisToken(config.EndPoints["https://api.travis-ci.org/"].AccessToken)
+	return client.Authentication.UsingTravisToken(token())
 }
