@@ -35,3 +35,4 @@ var syncCommand = kingpin.Command("sync", "triggers a new sync with GitHub").Act
 	wg.Wait()
 	return err
 })
+var syncRepoFlag = syncCommand.Flag("repo", "repository").Short('r').String()

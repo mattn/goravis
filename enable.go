@@ -10,13 +10,7 @@ var enableCommand = kingpin.Command("enable", "enables a project").Action(func(c
 		return err
 	}
 
-	var s string
-	r := ctx.SelectedCommand.GetFlag("r").String()
-	if r != nil {
-		s = *r
-	} else {
-		s = slug()
-	}
+	s := slug(ctx)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err

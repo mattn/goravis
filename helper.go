@@ -5,9 +5,15 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+
+	"github.com/alecthomas/kingpin"
 )
 
-func slug() string {
+func slug(ctx *kingpin.ParseContext) string {
+	r := ctx.SelectedCommand.GetFlag("r").String()
+	if r != nil && *r != "" {
+		return *r
+	}
 	b, _ := exec.Command("git", "config", "--get", "travis.slug").CombinedOutput()
 	if len(b) > 0 {
 		return strings.TrimSpace(string(b))

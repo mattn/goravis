@@ -13,7 +13,7 @@ var logsCommand = kingpin.Command("logs", "streams test logs").Action(func(ctx *
 		return err
 	}
 
-	s := slug()
+	s := slug(ctx)
 	builds, _, _, _, err := client.Builds.ListFromRepository(s, nil)
 	if err != nil {
 		return err
@@ -32,3 +32,4 @@ var logsCommand = kingpin.Command("logs", "streams test logs").Action(func(ctx *
 	fmt.Fprint(colorable.NewColorableStdout(), log.Body)
 	return nil
 })
+var logsRepoFlag = logsCommand.Flag("repo", "repository").Short('r').String()

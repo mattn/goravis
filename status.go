@@ -11,7 +11,7 @@ var statusCommand = kingpin.Command("status", "checks status of the latest build
 		return err
 	}
 
-	s := slug()
+	s := slug(ctx)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -20,3 +20,4 @@ var statusCommand = kingpin.Command("status", "checks status of the latest build
 	fmt.Printf("build #%s %s\n", repo.LastBuildNumber, repo.LastBuildState)
 	return nil
 })
+var statusRepoFlag = statusCommand.Flag("repo", "repository").Short('r').String()

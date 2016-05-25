@@ -23,3 +23,4 @@ var reposCommand = kingpin.Command("repos", "lists repositories the user has cer
 	}
 	return nil
 })
+var reposRepoFlag = reposCommand.Flag("repo", "repository").Short('r').String()

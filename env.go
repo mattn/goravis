@@ -13,7 +13,7 @@ var envListCommand = envCommand.Command("list", "").Action(func(ctx *kingpin.Par
 		return err
 	}
 
-	s := slug()
+	s := slug(ctx)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ var envSetCommand = envCommand.Command("set", "").Action(func(ctx *kingpin.Parse
 		return err
 	}
 
-	s := slug()
+	s := slug(ctx)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -71,3 +71,4 @@ var envSetCommand = envCommand.Command("set", "").Action(func(ctx *kingpin.Parse
 	return nil
 })
 var envSetArg = envSetCommand.Arg("env", "env to set").Strings()
+var envRepoFlag = envCommand.Flag("repo", "repository").Short('r').String()

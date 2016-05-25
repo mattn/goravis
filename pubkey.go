@@ -40,7 +40,7 @@ var pubkeyCommand = kingpin.Command("pubkey", "prints out a repository's public 
 		return err
 	}
 
-	s := slug()
+	s := slug(ctx)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -84,3 +84,4 @@ var pubkeyCommand = kingpin.Command("pubkey", "prints out a repository's public 
 	fmt.Println(s)
 	return nil
 })
+var pubkeyRepoFlag = pubkeyCommand.Flag("repo", "repository").Short('r').String()
