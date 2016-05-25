@@ -7,7 +7,7 @@ import (
 	"github.com/mattn/go-colorable"
 )
 
-var logsCommand = kingpin.Command("logs", "Streams test logs.").Action(func(ctx *kingpin.ParseContext) error {
+var logsCommand = kingpin.Command("logs", "streams test logs").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err

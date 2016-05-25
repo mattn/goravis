@@ -5,7 +5,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var statusCommand = kingpin.Command("status", "Checks status of the latest build.").Action(func(ctx *kingpin.ParseContext) error {
+var statusCommand = kingpin.Command("status", "checks status of the latest build").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err

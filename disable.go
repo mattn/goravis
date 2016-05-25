@@ -4,7 +4,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var disableCommand = kingpin.Command("disable", "Disable a project.").Action(func(ctx *kingpin.ParseContext) error {
+var disableCommand = kingpin.Command("disable", "disable a project").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err

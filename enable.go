@@ -4,7 +4,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var enableCommand = kingpin.Command("enable", "Enables a project.").Action(func(ctx *kingpin.ParseContext) error {
+var enableCommand = kingpin.Command("enable", "enables a project").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err

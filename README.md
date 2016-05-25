@@ -27,7 +27,7 @@ $ go get github.com/mattn/goravis
 - [ ] lint
 - [ ] login
 - [ ] logout
-- [ ] logs
+- [x] logs
 - [ ] monitor
 - [ ] open
 - [ ] pubkey

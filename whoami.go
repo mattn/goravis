@@ -6,7 +6,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var whoamiCommand = kingpin.Command("whoami", "Displays accounts and their subscription status.").Action(func(ctx *kingpin.ParseContext) error {
+var whoamiCommand = kingpin.Command("whoami", "displays accounts and their subscription status").Action(func(ctx *kingpin.ParseContext) error {
 	err := client.Authentication.UsingTravisToken(config.EndPoints["https://api.travis-ci.org/"].AccessToken)
 	if err != nil {
 		return err

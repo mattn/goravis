@@ -5,7 +5,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var tokenCommand = kingpin.Command("token", "Outputs the secret API token.").Action(func(ctx *kingpin.ParseContext) error {
+var tokenCommand = kingpin.Command("token", "outputs the secret API token").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err

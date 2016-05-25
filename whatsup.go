@@ -6,7 +6,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var whatsUpCommand = kingpin.Command("whatsup", "Lists most recent builds.").Action(func(ctx *kingpin.ParseContext) error {
+var whatsUpCommand = kingpin.Command("whatsup", "lists most recent builds").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
