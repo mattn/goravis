@@ -20,7 +20,14 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 		return err
 	}
 
-	s := slug()
+	var s string
+	r := ctx.SelectedCommand.GetFlag("repo").String()
+	if r != nil && *r != "" {
+		s = *r
+	} else {
+		s = slug()
+	}
+	println(s)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -78,3 +85,4 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 	return nil
 })
 var encryptArg = encryptCommand.Arg("data", "data to encrypt").Strings()
+var encryptRepoFlag = encryptCommand.Flag("repo", "repository").Short('r').String()

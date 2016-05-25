@@ -10,7 +10,13 @@ var disableCommand = kingpin.Command("disable", "disable a project").Action(func
 		return err
 	}
 
-	s := slug()
+	var s string
+	r := ctx.SelectedCommand.GetFlag("r").String()
+	if r != nil {
+		s = *r
+	} else {
+		s = slug()
+	}
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -35,3 +41,4 @@ var disableCommand = kingpin.Command("disable", "disable a project").Action(func
 	}
 	return nil
 })
+var disableRepoFlag = disableCommand.Flag("repo", "repository").Short('r').String()
