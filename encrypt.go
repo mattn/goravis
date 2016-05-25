@@ -8,16 +8,13 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"fmt"
+	"io/ioutil"
+	"os"
 
 	"github.com/alecthomas/kingpin"
 )
 
 var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis.yml").Action(func(ctx *kingpin.ParseContext) error {
-	if len(ctx.Elements) < 2 {
-		kingpin.Usage()
-		return nil
-	}
-
 	err := auth()
 	if err != nil {
 		return err
@@ -54,14 +51,22 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 	}
 	rsaPublicKey := cert.(*rsa.PublicKey)
 
-	s = ""
-	for _, v := range ctx.Elements[1:] {
-		if s != "" {
-			s += " "
+	var content []byte
+	if len(ctx.Elements) < 2 {
+		content, err = ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			return err
 		}
-		s += *v.Value
+	} else {
+		s = ""
+		for _, v := range ctx.Elements[1:] {
+			if s != "" {
+				s += " "
+			}
+			s += *v.Value
+		}
+		content = []byte(s)
 	}
-	content := []byte(s)
 
 	b, err := rsa.EncryptPKCS1v15(rand.Reader, rsaPublicKey, content)
 	if err != nil {
