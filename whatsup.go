@@ -28,7 +28,7 @@ var whatsUpCommand = kingpin.Command("whatsup", "Lists most recent builds.").Act
 			continue
 		}
 		resp.Body.Close()
-		fmt.Printf("%s %s: #%d\n", repo.Slug, build.State, build.Id)
+		fmt.Printf("%s %s: #%s\n", repo.Slug, build.State, build.Number)
 	}
 	return nil
 })
