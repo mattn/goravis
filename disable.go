@@ -4,7 +4,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var enableCommand = kingpin.Command("enable", "Enables a project.").Action(func(ctx *kingpin.ParseContext) error {
+var disableCommand = kingpin.Command("disable", "Disable a project.").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
@@ -25,7 +25,7 @@ var enableCommand = kingpin.Command("enable", "Enables a project.").Action(func(
 	req, err := client.NewRequest("PUT", "/hooks/", struct {
 		Hook `json:"hook"`
 	}{
-		Hook{repo.Id, true},
+		Hook{repo.Id, false},
 	}, nil)
 	if err != nil {
 		return err
