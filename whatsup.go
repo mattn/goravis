@@ -12,22 +12,22 @@ var whatsUpCommand = kingpin.Command("whatsup", "lists most recent builds").Acti
 		return err
 	}
 
-	u, resp, err := client.Users.GetAuthenticated()
+	u, _, err := client.Users.GetAuthenticated()
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
-	repos, resp, err := client.Repositories.Find(&travis.RepositoryListOptions{Member: u.Name})
+
+	repos, _, err := client.Repositories.Find(&travis.RepositoryListOptions{Member: u.Name})
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
+
 	for _, repo := range repos {
-		build, _, _, resp, err := client.Builds.Get(repo.LastBuildId)
+		build, _, _, _, err := client.Builds.Get(repo.LastBuildId)
 		if err != nil {
 			continue
 		}
-		resp.Body.Close()
+
 		fmt.Printf("%s %s: #%s\n", repo.Slug, build.State, build.Number)
 	}
 	return nil

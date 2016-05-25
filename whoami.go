@@ -11,11 +11,11 @@ var whoamiCommand = kingpin.Command("whoami", "displays accounts and their subsc
 	if err != nil {
 		return err
 	}
-	u, resp, err := client.Users.GetAuthenticated()
+	u, _, err := client.Users.GetAuthenticated()
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
+
 	login := u.Login
 	if login == "" {
 		login = u.Name

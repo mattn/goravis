@@ -11,11 +11,10 @@ var disableCommand = kingpin.Command("disable", "disable a project").Action(func
 	}
 
 	s := slug()
-	repo, resp, err := client.Repositories.GetFromSlug(s)
+	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
 
 	type Hook struct {
 		Id     uint `json:"id"`
@@ -30,10 +29,9 @@ var disableCommand = kingpin.Command("disable", "disable a project").Action(func
 	if err != nil {
 		return err
 	}
-	resp, err = client.Do(req, nil)
+	_, err = client.Do(req, nil)
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
 	return nil
 })

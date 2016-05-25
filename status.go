@@ -12,11 +12,10 @@ var statusCommand = kingpin.Command("status", "checks status of the latest build
 	}
 
 	s := slug()
-	repo, resp, err := client.Repositories.GetFromSlug(s)
+	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
 	}
-	resp.Body.Close()
 
 	fmt.Printf("build #%s %s\n", repo.LastBuildNumber, repo.LastBuildState)
 	return nil
