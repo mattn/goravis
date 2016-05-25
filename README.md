@@ -15,8 +15,8 @@ $ go get github.com/mattn/goravis
 - [ ] cache
 - [ ] cancel
 - [ ] console
-- [*] disable
-- [*] enable
+- [x] disable
+- [x] enable
 - [ ] encrypt
 - [ ] encrypt-file
 - [ ] endpoint
@@ -40,12 +40,12 @@ $ go get github.com/mattn/goravis
 - [ ] setup
 - [ ] show
 - [ ] sshkey
-- [*] status
+- [x] status
 - [ ] sync
-- [*] token
+- [x] token
 - [ ] version
-- [*] whatsup
-- [*] whoami
+- [x] whatsup
+- [x] whoami
 
 ## License
 
