@@ -12,26 +12,6 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-func pkcs1pad(src []byte, keySize int) [][]byte {
-	srcSize := len(src)
-	blockSize := keySize - 11
-	var v [][]byte
-	if srcSize <= blockSize {
-		v = append(v, src)
-	} else {
-		groups := len(src) / blockSize
-		for i := 0; i < groups; i++ {
-			block := src[:blockSize]
-			v = append(v, block)
-			src = src[blockSize:]
-			if len(src) < blockSize {
-				v = append(v, src)
-			}
-		}
-	}
-	return v
-}
-
 var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis.yml").Action(func(ctx *kingpin.ParseContext) error {
 	if len(ctx.Elements) < 2 {
 		kingpin.Usage()
@@ -83,7 +63,6 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 	}
 	content := []byte(s)
 
-	//b, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, rsaPublicKey, content, nil)
 	b, err := rsa.EncryptPKCS1v15(rand.Reader, rsaPublicKey, content)
 	if err != nil {
 		return err
