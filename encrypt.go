@@ -1,9 +1,9 @@
 package main
 
 import (
-	"crypto/md5"
 	"crypto/rand"
 	"crypto/rsa"
+	//"crypto/sha1"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
@@ -12,11 +12,32 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-func encrypt(pk *rsa.PublicKey, text, label []byte) ([]byte, error) {
-	return rsa.EncryptOAEP(md5.New(), rand.Reader, pk, text, label)
+func pkcs1pad(src []byte, keySize int) [][]byte {
+	srcSize := len(src)
+	blockSize := keySize - 11
+	var v [][]byte
+	if srcSize <= blockSize {
+		v = append(v, src)
+	} else {
+		groups := len(src) / blockSize
+		for i := 0; i < groups; i++ {
+			block := src[:blockSize]
+			v = append(v, block)
+			src = src[blockSize:]
+			if len(src) < blockSize {
+				v = append(v, src)
+			}
+		}
+	}
+	return v
 }
 
 var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis.yml").Action(func(ctx *kingpin.ParseContext) error {
+	if len(ctx.Elements) < 2 {
+		kingpin.Usage()
+		return nil
+	}
+
 	err := auth()
 	if err != nil {
 		return err
@@ -53,7 +74,17 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 	}
 	rsaPublicKey := cert.(*rsa.PublicKey)
 
-	b, err := rsa.EncryptPKCS1v15(rand.Reader, rsaPublicKey, []byte("foo=bar"))
+	s = ""
+	for _, v := range ctx.Elements[1:] {
+		if s != "" {
+			s += " "
+		}
+		s += *v.Value
+	}
+	content := []byte(s)
+
+	//b, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, rsaPublicKey, content, nil)
+	b, err := rsa.EncryptPKCS1v15(rand.Reader, rsaPublicKey, content)
 	if err != nil {
 		return err
 	}
@@ -62,4 +93,4 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 	fmt.Println(s)
 	return nil
 })
-var encryptArg = encryptCommand.Arg("data", "data to encrypt").String()
+var encryptArg = encryptCommand.Arg("data", "data to encrypt").Strings()
