@@ -28,7 +28,7 @@ func slug() string {
 		return ""
 	}
 	s = strings.TrimSpace(string(b))
-	m := regexp.MustCompile(`([^/]+/[^/]+)(\.git)?$`).FindStringSubmatch(s)
+	m := regexp.MustCompile(`[:/]([^/]+/[^/]+)(\.git)?$`).FindStringSubmatch(s)
 	if len(m) != 3 {
 		return ""
 	}
