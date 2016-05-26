@@ -17,33 +17,33 @@ $ go get github.com/mattn/goravis
 - [ ] console
 - [x] disable
 - [x] enable
-- [ ] encrypt
+- [x] encrypt
 - [ ] encrypt-file
 - [ ] endpoint
 - [ ] env
-- [ ] help
+- [x] help
 - [ ] history
 - [ ] init
 - [ ] lint
 - [ ] login
-- [ ] logout
+- [x] logout
 - [x] logs
 - [ ] monitor
-- [ ] open
-- [ ] pubkey
+- [x] open
+- [x] pubkey
 - [ ] raw
 - [ ] report
-- [ ] repos
+- [x] repos
 - [ ] requests
 - [ ] restart
 - [ ] settings
 - [ ] setup
-- [ ] show
+- [x] show
 - [ ] sshkey
 - [x] status
-- [ ] sync
+- [x] sync
 - [x] token
-- [ ] version
+- [x] version
 - [x] whatsup
 - [x] whoami
 
