@@ -15,6 +15,9 @@ var disableCommand = kingpin.Command("disable", "disable a project").Action(func
 	if err != nil {
 		return err
 	}
+	if repo.LastBuildId == 0 {
+		fatal("no build yet for "+s, nil)
+	}
 
 	type Hook struct {
 		Id     uint `json:"id"`

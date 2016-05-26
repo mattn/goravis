@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/alecthomas/kingpin"
 )
 
@@ -15,6 +16,9 @@ var statusCommand = kingpin.Command("status", "checks status of the latest build
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
+	}
+	if repo.LastBuildId == 0 {
+		fatal("no build yet for "+s, nil)
 	}
 
 	fmt.Printf("build #%s %s\n", repo.LastBuildNumber, repo.LastBuildState)

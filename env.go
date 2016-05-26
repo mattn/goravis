@@ -33,6 +33,7 @@ var envListCommand = envCommand.Command("list", "").Action(func(ctx *kingpin.Par
 	if err != nil {
 		return err
 	}
+	fmt.Println("# environment variables for " + s)
 	for _, env_ver := range envVarsRes.EnvVers {
 		fmt.Println(env_ver)
 	}

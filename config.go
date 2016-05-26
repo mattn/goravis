@@ -18,9 +18,13 @@ type Config struct {
 	} `yaml:"last_check"`
 	CheckedCompletion bool   `yaml:"checked_completion"`
 	CompletionVersion string `yaml:"completion_version"`
-	EndPoints         map[string]struct {
+
+	EndPoints map[string]struct {
 		AccessToken string `yaml:"access_token"`
 	} `yaml:"endpoints"`
+	Repos map[string]struct {
+		EndPoint string `yaml:"endpoint"`
+	} `yaml:"repos"`
 }
 
 func (c *Config) Load() error {

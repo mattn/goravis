@@ -18,6 +18,9 @@ var logsCommand = kingpin.Command("logs", "streams test logs").Action(func(ctx *
 	if err != nil {
 		return err
 	}
+	if len(builds) == 0 {
+		fatal("no build yet for "+s, nil)
+	}
 
 	job, _, err := client.Jobs.Get(builds[0].JobIds[0])
 	if err != nil {
