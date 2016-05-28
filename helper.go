@@ -20,7 +20,7 @@ func fatal(msg string, err error) {
 }
 
 func slug(ctx *kingpin.ParseContext) string {
-	r := ctx.SelectedCommand.GetFlag("r")
+	r := ctx.SelectedCommand.GetFlag("repo")
 	if r != nil {
 		rs := r.String()
 		if rs != nil {
