@@ -10,8 +10,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"runtime"
 
 	"github.com/alecthomas/kingpin"
+	"github.com/mattn/go-isatty"
 )
 
 var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis.yml").Action(func(ctx *kingpin.ParseContext) error {
@@ -53,6 +55,11 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 
 	var content []byte
 	if len(ctx.Elements) < 2 {
+		if runtime.GOOS == "windows" {
+			fmt.Println("Reading from stdin, press Ctrl+Z when done")
+		} else {
+			fmt.Println("Reading from stdin, press Ctrl+D when done")
+		}
 		content, err = ioutil.ReadAll(os.Stdin)
 		if err != nil {
 			return err
@@ -73,8 +80,12 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 		return err
 	}
 
-	s = "  secure: " + base64.StdEncoding.EncodeToString(b)
-	fmt.Println(s)
+	s = base64.StdEncoding.EncodeToString(b)
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		fmt.Println("  secure: " + s)
+	} else {
+		fmt.Printf("%q", s)
+	}
 	return nil
 })
 var encryptArg = encryptCommand.Arg("data", "data to encrypt").Strings()
