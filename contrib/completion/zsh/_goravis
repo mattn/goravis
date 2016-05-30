@@ -87,7 +87,7 @@ _goravis() {
         ${__help[@]} \
       ;;
 
-    (logout|token|version|whatsup|whoami)
+    (accounts|logout|token|version|whatsup|whoami)
       _arguments \
         ${__help[@]}
         ;;
