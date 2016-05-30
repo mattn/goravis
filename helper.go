@@ -28,6 +28,7 @@ func slug(ctx *kingpin.ParseContext) string {
 		}
 	}
 	b, err := exec.Command("git", "config", "--get", "travis.slug").CombinedOutput()
+	println(string(b))
 	if len(b) > 0 {
 		return strings.TrimSpace(string(b))
 	}
@@ -59,6 +60,10 @@ func slug(ctx *kingpin.ParseContext) string {
 }
 
 func token() string {
+	err := config.Load()
+	if err != nil {
+		fatal("not logged in, please run travis login", nil)
+	}
 	t := os.Getenv("TRAVIS_TOKEN")
 	ep, ok := config.EndPoints["https://api.travis-ci.org/"]
 	if ok {
