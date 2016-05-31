@@ -79,9 +79,9 @@ var pubkeyCommand = kingpin.Command("pubkey", "prints out a repository's public 
 	buf.Write(b1)
 	binary.Write(buf, binary.BigEndian, uint32(len(b2)))
 	buf.Write(b2)
-	s = "ssh-rsa " + base64.StdEncoding.EncodeToString(buf.Bytes())
-	fmt.Println("Public key for %s:\n\n", s)
-	fmt.Println(s)
+	rsakey := "ssh-rsa " + base64.StdEncoding.EncodeToString(buf.Bytes())
+	fmt.Printf("Public key for %s:\n\n", s)
+	fmt.Println(rsakey)
 	return nil
 })
 var pubkeyRepoFlag = pubkeyCommand.Flag("repo", "repository").Short('r').String()
