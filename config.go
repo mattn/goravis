@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -25,7 +26,7 @@ type Repo struct {
 
 type Config struct {
 	path              string
-	LastCheck         *LastCheck           `yaml:"last_check"`
+	LastCheck         LastCheck            `yaml:"last_check"`
 	CheckedCompletion bool                 `yaml:"checked_completion"`
 	CompletionVersion string               `yaml:"completion_version"`
 	EndPoints         map[string]*EndPoint `yaml:"endpoints"`
@@ -60,4 +61,33 @@ func (c *Config) Save() error {
 		return err
 	}
 	return ioutil.WriteFile(c.path, b, 0600)
+}
+
+type HubConfig struct {
+	User       string `yaml:"user"`
+	OAuthToken string `yaml:"oauth_token"`
+	Protocol   string `yaml:"protocol"`
+}
+
+func tryHubConfig() error {
+	home := os.Getenv("HOME")
+	if home == "" && runtime.GOOS == "windows" {
+		home = os.Getenv("USERPROFILE")
+	}
+	path := filepath.Join(home, ".config", "hub")
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	var hc map[string][]*HubConfig
+
+	err = yaml.Unmarshal(b, &hc)
+	if err != nil {
+		return err
+	}
+	githubToken, ok := hc["github.com"]
+	if !ok || len(githubToken) == 0 {
+		return errors.New("token not found")
+	}
+	return githubAuth(githubToken[0].OAuthToken)
 }

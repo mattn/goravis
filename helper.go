@@ -23,12 +23,11 @@ func slug(ctx *kingpin.ParseContext) string {
 	r := ctx.SelectedCommand.GetFlag("repo")
 	if r != nil {
 		rs := r.String()
-		if rs != nil {
+		if rs != nil && *rs != "" {
 			return *rs
 		}
 	}
 	b, err := exec.Command("git", "config", "--get", "travis.slug").CombinedOutput()
-	println(string(b))
 	if len(b) > 0 {
 		return strings.TrimSpace(string(b))
 	}
@@ -74,4 +73,15 @@ func token() string {
 
 func auth() error {
 	return client.Authentication.UsingTravisToken(token())
+}
+
+func githubAuth(githubToken string) error {
+	travisToken, _, err := client.Authentication.UsingGithubToken(githubToken)
+	if err != nil {
+		return err
+	}
+	config.EndPoints["https://api.travis-ci.org/"] = &EndPoint{
+		AccessToken: string(travisToken),
+	}
+	return config.Save()
 }

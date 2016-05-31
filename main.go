@@ -15,5 +15,6 @@ var (
 )
 
 func main() {
+	client.Headers["User-Agent"] = "Travis/Goravis"
 	kingpin.Parse()
 }
