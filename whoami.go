@@ -12,10 +12,6 @@ var whoamiCommand = kingpin.Command("whoami", "displays accounts and their subsc
 		return err
 	}
 
-	err = client.Authentication.UsingTravisToken(config.EndPoints["https://api.travis-ci.org/"].AccessToken)
-	if err != nil {
-		return err
-	}
 	u, _, err := client.Users.GetAuthenticated()
 	if err != nil {
 		return err
