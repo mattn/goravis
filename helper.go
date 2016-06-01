@@ -6,8 +6,6 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
-
-	"github.com/alecthomas/kingpin"
 )
 
 func fatal(msg string, err error) {
@@ -19,13 +17,9 @@ func fatal(msg string, err error) {
 	os.Exit(1)
 }
 
-func slug(ctx *kingpin.ParseContext) string {
-	r := ctx.SelectedCommand.GetFlag("repo")
-	if r != nil {
-		rs := r.String()
-		if rs != nil && *rs != "" {
-			return *rs
-		}
+func slug(flag *string) string {
+	if flag != nil {
+		return *flag
 	}
 	b, err := exec.Command("git", "config", "--get", "travis.slug").CombinedOutput()
 	if len(b) > 0 {

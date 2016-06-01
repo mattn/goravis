@@ -16,13 +16,23 @@ import (
 	"github.com/mattn/go-isatty"
 )
 
-var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis.yml").Action(func(ctx *kingpin.ParseContext) error {
+var (
+	encryptCommand  = kingpin.Command("encrypt", "encrypts values for the .travis.yml")
+	encryptRepoFlag = encryptCommand.Flag("repo", "repository").Short('r').String()
+	encryptArg      = encryptCommand.Arg("data", "data to encrypt").Strings()
+)
+
+func init() {
+	encryptCommand.Action(encryptAction)
+}
+
+func encryptAction(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(encryptRepoFlag)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -54,7 +64,7 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 	rsaPublicKey := cert.(*rsa.PublicKey)
 
 	var content []byte
-	if len(ctx.Elements) < 2 {
+	if encryptArg != nil && len(*encryptArg) < 2 {
 		if runtime.GOOS == "windows" {
 			fmt.Println("Reading from stdin, press Ctrl+Z when done")
 		} else {
@@ -66,11 +76,11 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 		}
 	} else {
 		s = ""
-		for _, v := range ctx.Elements[1:] {
+		for _, v := range *encryptArg {
 			if s != "" {
 				s += " "
 			}
-			s += *v.Value
+			s += v
 		}
 		content = []byte(s)
 	}
@@ -87,6 +97,4 @@ var encryptCommand = kingpin.Command("encrypt", "encrypts values for the .travis
 		fmt.Printf("%q", s)
 	}
 	return nil
-})
-var encryptArg = encryptCommand.Arg("data", "data to encrypt").Strings()
-var encryptRepoFlag = encryptCommand.Flag("repo", "repository").Short('r').String()
+}

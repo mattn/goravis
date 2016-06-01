@@ -4,13 +4,22 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var disableCommand = kingpin.Command("disable", "disable a project").Action(func(ctx *kingpin.ParseContext) error {
+var (
+	disableCommand  = kingpin.Command("disable", "disable a project")
+	disableRepoFlag = disableCommand.Flag("repo", "repository").Short('r').String()
+)
+
+func init() {
+	disableCommand.Action(disableAction)
+}
+
+func disableAction(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(disableRepoFlag)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -37,5 +46,4 @@ var disableCommand = kingpin.Command("disable", "disable a project").Action(func
 		return err
 	}
 	return nil
-})
-var disableRepoFlag = disableCommand.Flag("repo", "repository").Short('r').String()
+}

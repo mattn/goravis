@@ -6,13 +6,22 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var statusCommand = kingpin.Command("status", "checks status of the latest build").Action(func(ctx *kingpin.ParseContext) error {
+var (
+	statusCommand  = kingpin.Command("status", "checks status of the latest build")
+	statusRepoFlag = statusCommand.Flag("repo", "repository").Short('r').String()
+)
+
+func init() {
+	statusCommand.Action(statusAction)
+}
+
+func statusAction(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(statusRepoFlag)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -23,5 +32,4 @@ var statusCommand = kingpin.Command("status", "checks status of the latest build
 
 	fmt.Printf("build #%s %s\n", repo.LastBuildNumber, repo.LastBuildState)
 	return nil
-})
-var statusRepoFlag = statusCommand.Flag("repo", "repository").Short('r').String()
+}

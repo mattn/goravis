@@ -5,13 +5,22 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var branchesCommand = kingpin.Command("branches", "displays the most recent build for each branch").Action(func(ctx *kingpin.ParseContext) error {
+var (
+	branchesCommand  = kingpin.Command("branches", "displays the most recent build for each branch")
+	branchesRepoFlag = branchesCommand.Flag("repo", "repository").Short('r').String()
+)
+
+func init() {
+	branchesCommand.Action(branchesAction)
+}
+
+func branchesAction(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(branchesRepoFlag)
 	branches, _, err := client.Branches.ListFromRepository(s)
 	if err != nil {
 		return err
@@ -34,5 +43,4 @@ var branchesCommand = kingpin.Command("branches", "displays the most recent buil
 		}
 	}
 	return nil
-})
-var branchesRepoFlag = branchesCommand.Flag("repo", "repository").Short('r').String()
+}

@@ -4,13 +4,22 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var enableCommand = kingpin.Command("enable", "enables a project").Action(func(ctx *kingpin.ParseContext) error {
+var (
+	enableCommand  = kingpin.Command("enable", "enables a project")
+	enableRepoFlag = enableCommand.Flag("repo", "repository").Short('r').String()
+)
+
+func init() {
+	enableCommand.Action(enableAction)
+}
+
+func enableAction(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(enableRepoFlag)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -34,5 +43,4 @@ var enableCommand = kingpin.Command("enable", "enables a project").Action(func(c
 		return err
 	}
 	return nil
-})
-var enableRepoFlag = enableCommand.Flag("repo", "repository").Short('r').String()
+}

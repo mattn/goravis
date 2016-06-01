@@ -34,13 +34,22 @@ func toBytes(n *big.Int, significant []byte) []byte {
 	return append(b, significant...)
 }
 
-var pubkeyCommand = kingpin.Command("pubkey", "prints out a repository's public key").Action(func(ctx *kingpin.ParseContext) error {
+var (
+	pubkeyCommand  = kingpin.Command("pubkey", "prints out a repository's public key")
+	pubkeyRepoFlag = pubkeyCommand.Flag("repo", "repository").Short('r').String()
+)
+
+func init() {
+	pubkeyCommand.Action(pubkeyAction)
+}
+
+func pubkeyAction(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(pubkeyRepoFlag)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -83,5 +92,4 @@ var pubkeyCommand = kingpin.Command("pubkey", "prints out a repository's public 
 	fmt.Printf("Public key for %s:\n\n", s)
 	fmt.Println(rsakey)
 	return nil
-})
-var pubkeyRepoFlag = pubkeyCommand.Flag("repo", "repository").Short('r').String()
+}

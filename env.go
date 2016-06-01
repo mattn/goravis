@@ -6,14 +6,26 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var envCommand = kingpin.Command("env", "show or modify build environment variables")
-var envListCommand = envCommand.Command("list", "").Action(func(ctx *kingpin.ParseContext) error {
+var (
+	envCommand     = kingpin.Command("env", "show or modify build environment variables")
+	envListCommand = envCommand.Command("list", "")
+	envSetCommand  = envCommand.Command("set", "")
+	envSetArg      = envSetCommand.Arg("env", "env to set").Strings()
+	envRepoFlag    = envCommand.Flag("repo", "repository").Short('r').String()
+)
+
+func init() {
+	envListCommand.Action(envListAction)
+	envSetCommand.Action(envSetAction)
+}
+
+func envListAction(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(envRepoFlag)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -38,8 +50,9 @@ var envListCommand = envCommand.Command("list", "").Action(func(ctx *kingpin.Par
 		fmt.Println(env_ver)
 	}
 	return nil
-})
-var envSetCommand = envCommand.Command("set", "").Action(func(ctx *kingpin.ParseContext) error {
+}
+
+func envSetAction(ctx *kingpin.ParseContext) error {
 	if len(ctx.Elements) != 4 {
 		kingpin.Usage()
 		return nil
@@ -49,7 +62,7 @@ var envSetCommand = envCommand.Command("set", "").Action(func(ctx *kingpin.Parse
 		return err
 	}
 
-	s := slug(ctx)
+	s := slug(envRepoFlag)
 	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
@@ -70,6 +83,4 @@ var envSetCommand = envCommand.Command("set", "").Action(func(ctx *kingpin.Parse
 		return err
 	}
 	return nil
-})
-var envSetArg = envSetCommand.Arg("env", "env to set").Strings()
-var envRepoFlag = envCommand.Flag("repo", "repository").Short('r').String()
+}
