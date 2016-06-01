@@ -18,7 +18,7 @@ func fatal(msg string, err error) {
 }
 
 func slug(flag *string) string {
-	if flag != nil {
+	if flag != nil && *flag != "" {
 		return *flag
 	}
 	b, err := exec.Command("git", "config", "--get", "travis.slug").CombinedOutput()
