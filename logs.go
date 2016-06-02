@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"net/http"
 
 	"github.com/alecthomas/kingpin"
 	"github.com/mattn/go-colorable"
@@ -23,24 +25,35 @@ func logsAction(ctx *kingpin.ParseContext) error {
 	}
 
 	s := slug(logsRepoFlag)
-	builds, _, _, _, err := client.Builds.ListFromRepository(s, nil)
+	repo, _, err := client.Repositories.GetFromSlug(s)
 	if err != nil {
 		return err
 	}
-	if len(builds) == 0 {
+	if repo.LastBuildId == 0 {
 		fatal("no build yet for "+s, nil)
 	}
 
-	job, _, err := client.Jobs.Get(builds[0].JobIds[0])
+	_, jobs, _, _, err := client.Builds.Get(repo.LastBuildId)
 	if err != nil {
 		return err
 	}
 
-	log, _, err := client.Logs.Get(job.LogId)
+	u, err := client.BaseURL.Parse(fmt.Sprintf("/jobs/%d/log", jobs[0].Id))
 	if err != nil {
 		return err
 	}
 
-	fmt.Fprint(colorable.NewColorableStdout(), log.Body)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	_, err = io.Copy(colorable.NewColorableStdout(), resp.Body)
 	return nil
 }
