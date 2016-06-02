@@ -17,6 +17,6 @@ func init() {
 }
 
 func openAction(ctx *kingpin.ParseContext) error {
-	u := fmt.Sprintf("https://github.com/%s", slug(openRepoFlag))
+	u := fmt.Sprintf("https://travis-ci.org/%s", slug(openRepoFlag))
 	return open.Run(u)
 }
