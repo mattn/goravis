@@ -6,11 +6,13 @@ _goravis() {
   local -a commands __repo __help
   commands=(
   'help:Show help'
+  'accounts:displays accounts and their subscription status'
   'branches:displays the most recent build for each branch'
   'disable:disable a project'
   'enable:enables a project'
   'encrypt:encrypts values for the .travis.yml'
   'env:env'
+  'login:authenticates against the API and stores the token'
   'logout:deletes the stored API token'
   'logs:streams test logs'
   'open:opens a build or job in the browser'
@@ -87,7 +89,7 @@ _goravis() {
         ${__help[@]} \
       ;;
 
-    (accounts|logout|token|version|whatsup|whoami)
+    (accounts|login|logout|token|version|whatsup|whoami)
       _arguments \
         ${__help[@]}
         ;;
