@@ -10,8 +10,8 @@ $ go get github.com/mattn/goravis
 
 ## TODO
 
-- [ ] accounts
-- [ ] branches
+- [x] accounts
+- [x] branches
 - [ ] cache
 - [ ] cancel
 - [ ] console
@@ -25,7 +25,7 @@ $ go get github.com/mattn/goravis
 - [ ] history
 - [ ] init
 - [ ] lint
-- [ ] login
+- [x] login
 - [x] logout
 - [x] logs
 - [ ] monitor
