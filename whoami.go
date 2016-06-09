@@ -6,7 +6,7 @@ import (
 	"github.com/alecthomas/kingpin"
 )
 
-var whoamiCommand = kingpin.Command("whoami", "displays accounts and their subscription status").Action(func(ctx *kingpin.ParseContext) error {
+var whoamiCommand = kingpin.Command("whoami", "outputs the current user").Action(func(ctx *kingpin.ParseContext) error {
 	err := auth()
 	if err != nil {
 		return err
