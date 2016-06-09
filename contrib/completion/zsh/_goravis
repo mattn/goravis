@@ -23,7 +23,7 @@ _goravis() {
   'token:outputs the secret API token'
   'version:outputs the client version'
   'whatsup:lists most recent builds'
-  'whoami:displays accounts and their subscription status'
+  'whoami:outputs the current user'
   )
 
   __repo=(
