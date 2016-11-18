@@ -33,16 +33,27 @@ type Config struct {
 	Repos             map[string]*Repo     `yaml:"repos"`
 }
 
+const configYml = "config.yml"
+
 func newConfig() *Config {
-	home := os.Getenv("HOME")
-	if home == "" && runtime.GOOS == "windows" {
-		home = os.Getenv("USERPROFILE")
-	}
 	c := &Config{
 		EndPoints: make(map[string]*EndPoint),
 		Repos:     make(map[string]*Repo),
 	}
-	c.path = filepath.Join(home, ".travis", "config.yml")
+
+	if configPath := os.Getenv("TRAVIS_CONFIG_PATH"); configPath != "" {
+		path := filepath.Join(configPath, configYml)
+		if _, err := os.Stat(path); err == nil {
+			c.path = path
+			return c
+		}
+	}
+
+	home := os.Getenv("HOME")
+	if home == "" && runtime.GOOS == "windows" {
+		home = os.Getenv("USERPROFILE")
+	}
+	c.path = filepath.Join(home, ".travis", configYml)
 	os.MkdirAll(filepath.Dir(c.path), 0700)
 	return c
 }
