@@ -13,6 +13,10 @@ import (
 )
 
 var loginCommand = kingpin.Command("login", "authenticates against the API and stores the token").Action(func(ctx *kingpin.ParseContext) error {
+	if token() != "" {
+		return nil
+	}
+
 	if err := tryHubConfig(); err == nil {
 		return nil
 	}
